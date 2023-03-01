@@ -1,24 +1,24 @@
-import MapSideItem from "./MapSideItem";
-import {Paper} from "@mui/material";
+import * as React from "react";
 
-export default function SideTest()
+import {
+    BarChart,
+    Bar,
+    XAxis,
+    YAxis,
+    CartesianGrid,
+    Tooltip,
+    Legend,
+    ReferenceLine
+  } from "recharts";
+import StoreContext from "../../common/Store";
+export default function MapSideinfo(props)
 {
-    const districts = []; 
-    for(let i = 1; i <= 27; ++i){
-        districts.push(<MapSideItem key={i} id={i}/>)
-    }
+    const { store } = React.useContext(StoreContext);
     return (
-        <Paper style={{display: 'flex', flexFlow: "column", position:'relative', width:'100%', height:'100%'}}>
-            <div style={{display:'flex', flex: "0 1 50px", marginBottom:'10px'}}>
-                <div style={{display:'flex', alignItems: 'end', justifyContent:'center', flex: 1.2,  fontSize:'12px', color:'grey'}}>Districts</div>
-                <div style={{display:'flex', alignItems: 'end', justifyContent:'left', flex: 1.8,  fontSize:'12px', color:'grey'}}>Candidates</div>
-                <div style={{display:'flex', alignItems: 'end', justifyContent:'center', flex: 1.2,  fontSize:'12px', color:'grey'}}>Votes</div>
-                <div style={{display:'flex', alignItems: 'end', justifyContent:'center', flex: 0.8,  fontSize:'12px', color:'grey'}}>Percent</div>
-                <div style={{display:'flex', alignItems: 'end', justifyContent:'center', flex: 0.15,  fontSize:'12px', color:'grey'}}></div>
-            </div>
-            <div style={{position:'relative', display:'flex', flexFlow: 'column', flex: '1 1 auto', backgroundColor:'white', overflowY: 'scroll'}}>
-                {districts}
-            </div>
-        </Paper>
-    );
+        <div style={{flex:1, backgroundColor:'white'}}>
+            <span>
+                {store.map.state !== 'none' ? `${store.map.state} District #${store.map.district}` : ""}
+            </span>
+        </div>
+    )
 }

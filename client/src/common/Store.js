@@ -6,6 +6,7 @@ import StateModel from "../models/StateModel";
 import DistrictModel from "../models/DistrictModel";
 import PopulationModel from "../models/PopulationModel";
 import {StateType, FilterType, TabType} from './Enums';
+import MockData from './MockData';
 export const StoreContext = createContext({});
 
 export const StoreActionType = {
@@ -14,6 +15,7 @@ export const StoreActionType = {
     ADD_STATE_DATA: "add_state_data",
     UPDATE_FILTER: "update_filter",
     UPDATE_TAB: "change_tab",
+    DISTRICT_HOVER: "district_hover"
 }
 
 function setStyle(store)
@@ -31,19 +33,20 @@ function StoreContextProvider(props) {
         map: {
             plan: "2022",
             state: StateType.NONE,
+            district: 1,
             prevState: null,
             subPlan: null,
             filters: [],
         },
         data: {
-            "2022": createCountryModel(dummyData1),
-            "2020": createCountryModel(dummyData2),
+            "2022": createCountryModel(MockData("2022")),
+            "2020": createCountryModel(MockData("2020")),
         },
         tab: TabType.MAP
     })
     setStyle(store);
 // --- STATE HELPER ---------------------------------
-    function createMapState(plan, stateType, subPlan, filters)
+    function createMapState(plan, stateType, subPlan, filters, district=1)
     {
         return {
             plan: (plan !== undefined)? plan : store.map.plan,
@@ -51,6 +54,7 @@ function StoreContextProvider(props) {
             prevState: store.map.state,
             subPlan: (subPlan !== undefined)? subPlan : store.map.subPlan,
             filters: (filters !== undefined)? filters : store.map.filters,
+            district: district
         }
     }
     function createDataState(plan, stateType, data)
@@ -58,6 +62,7 @@ function StoreContextProvider(props) {
     }
     function createCountryModel(countryJsonData)
     {
+        console.log(countryJsonData)
         let plan = countryJsonData.plan;
         let stateModels = {};
         for (const stateKey in countryJsonData.data)
@@ -119,6 +124,12 @@ function StoreContextProvider(props) {
                     data: store.data,
                     tab: store.tab,
                 })
+            case StoreActionType.DISTRICT_HOVER:
+                return setStore({
+                    map: createMapState(prev, prev, prev, prev, payload.district),
+                    data: store.data,
+                    tab: payload.tabType,
+                })
             default:
                 return store;
         }
@@ -167,6 +178,14 @@ function StoreContextProvider(props) {
         storeReducer({
             type: StoreActionType.UPDATE_FILTER,
             payload: {filters: filters}
+        })
+    }
+
+    store.hoverDistrict = function(district)
+    {
+        storeReducer({
+            type: StoreActionType.DISTRICT_HOVER,
+            payload: { district }
         })
     }
 

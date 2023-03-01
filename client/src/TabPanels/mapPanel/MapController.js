@@ -130,9 +130,17 @@ export default function MapController()
     {
         let option = {
             style: MapProperty.state.style,
-            onEachFeature: (feature, layer) => { layer.on('click', () => {
-                OnDistrictClick(feature, layer);
-            })}
+            onEachFeature: (feature, layer) => { 
+                layer.on('click', () => {
+                    console.log(feature);
+                    console.log(layer);
+                    store.hoverDistrict(feature.properties["DISTRICT"])
+                })
+                layer.on('mouseover', () => {
+                    
+                    // store.hoverDistrict()
+                })
+            }
         };
         // AddGeoJsonLayer(GeoData[stateType][GeoDataType.STATE], LayerGroupType.STATE_DEFAULT, option);
         AddGeoJsonLayer(GeoData[stateType][GeoDataType.DISTRICT], LayerGroupType.STATE_DEFAULT, option);
